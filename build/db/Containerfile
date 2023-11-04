@@ -1,0 +1,2 @@
+FROM postgres:13.11-alpine3.18
+COPY migrations/*.sql /docker-entrypoint-initdb.d/
