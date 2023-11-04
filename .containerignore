@@ -1,0 +1,9 @@
+.git
+bin
+build
+deploy
+proto
+
+.containerignore
+.gitignore
+**/*.md
