@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-url-shortener-storage-cfg
+data:
+  STORAGE_TYPE: postgres
+  PG_PASSWORD: ozonfintech1339
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: url-shortener
+  name: service-url-shortener
+spec:
+  containers:
+  - name: db
+    image: localhost/service-url-shortener-db
+    env:
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        configMapKeyRef:
+          name: service-url-shortener-storage-cfg
+          key: PG_PASSWORD
+    volumeMounts:
+    - mountPath: /var/lib/postgresql/data
+      name: db-pvc
+  - name: app
+    image: localhost/service-url-shortener-app
+    envFrom:
+    - configMapRef:
+        name: service-url-shortener-app-cfg
+        optional: false
+    - configMapRef:
+        name: service-url-shortener-storage-cfg
+    ports:
+    - containerPort: 8081
+      hostPort: 8081
+  volumes:
+  - name: db-pvc
+    persistentVolumeClaim:
+      claimName: service-url-shortener-db
