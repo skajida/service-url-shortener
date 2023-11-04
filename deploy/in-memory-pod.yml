@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-url-shortener-storage-cfg
+data:
+  STORAGE_TYPE: in-memory
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: url-shortener
+  name: service-url-shortener
+spec:
+  containers:
+  - name: app
+    image: localhost/service-url-shortener-app
+    envFrom:
+    - configMapRef:
+        name: service-url-shortener-app-cfg
+        optional: false
+    - configMapRef:
+        name: service-url-shortener-storage-cfg
+    ports:
+    - containerPort: 8081
+      hostPort: 8081
